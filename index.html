@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hw-10</title>
+  </head>
+  <body>
+    <script>
+const toDoList = {
+        list: [
+          { name: "Shop", status: true, text: "Buy milk" },
+          { name: "Shop", status: false, text: "Buy bread" },
+          { name: "Shop", status: true, text: "Buy bread" },
+        ],
+        get newList() {
+          return this.list;
+        },
+        set newList(value) {
+          if (
+            value !== this.pushList ||
+            value !== this.delList ||
+            value !== this.getSummery
+          ) {
+            Object.seal(this.list);
+          }
+        },
+      };
+      
+       // запретить добавлять / удалять / изменять любые свойства и методы вашего объекта
+      Object.freeze(toDoList);
+      // методы не должны перечислялся при переборе объекта
+      Object.defineProperty(toDoList, "pushList", {
+        value: function (name, text, status) {
+          status = false;
+          const result = this.list.findIndex(function (element) {
+            return element.name === name;
+          });
+          if (result === -1) {
+            this.list.push({ name, text, status });
+          }
+        },
+        enumerable: false,
+        configurable: false,
+      });
+
+      Object.defineProperty(toDoList, "delList", {
+        value: function (index) {
+          return this.splice(index);
+        },
+        enumerable: false,
+        configurable: false,
+      });
+
+      Object.defineProperty(toDoList, "getSummery", {
+        value: function () {
+          const resultObj = {};
+          resultObj.complite = 0;
+          resultObj.left = 0;
+          resultObj.total = 0;
+          this.list.forEach((element) => {
+            if (element["status"] === true) {
+              resultObj.complite++;
+            } else if (element["status"] === false) {
+              resultObj.left++;
+            }
+            resultObj.total++;
+          });
+          return resultObj;
+        },
+        enumerable: false,
+        configurable: false,
+      });
+      </script>
+  </body>
+</html>
